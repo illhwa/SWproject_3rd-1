@@ -9,6 +9,7 @@ const DashboardPage = () => {
     completedSurvey: false,
     hasRecommendations: false,
     walletValue: 0,
+    coinRecommendations: false,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -42,45 +43,69 @@ const DashboardPage = () => {
       </div>
 
       <div className="dashboard-cards">
-        {/* 설문 */}
+        {/* 투자 성향 설문 */}
         <div className="dashboard-card">
           <div className="card-icon"><i className="fas fa-clipboard-list"></i></div>
           <div className="card-content">
             <h2>투자 성향 설문</h2>
             <p>{userData.completedSurvey ? '설문을 완료했습니다.' : '투자 성향을 파악하기 위한 설문을 완료하세요.'}</p>
-            <Link to="/survey" className={`card-button ${userData.completedSurvey ? 'secondary' : 'primary'}`}>
-              {userData.completedSurvey ? '설문 다시하기' : '설문 시작하기'}
-            </Link>
+            <Link to="/survey" className="card-button primary">설문 시작하기</Link>
           </div>
         </div>
 
-        {/* 추천 */}
+        {/* 주식 추천 */}
         <div className="dashboard-card">
           <div className="card-icon"><i className="fas fa-chart-line"></i></div>
           <div className="card-content">
             <h2>주식 추천</h2>
             <p>{userData.hasRecommendations ? '추천 결과가 준비되었습니다.' : '설문을 완료하면 추천을 받을 수 있습니다.'}</p>
-            <Link
-              to="/recommendations"
+            <Link 
+              to={userData.completedSurvey ? "/recommendations" : "#"}
               className={`card-button ${userData.completedSurvey ? 'primary' : 'disabled'}`}
               onClick={(e) => {
                 if (!userData.completedSurvey) e.preventDefault();
               }}
             >
-              {userData.hasRecommendations ? '추천 결과 보기' : '추천 받기'}
+              {userData.completedSurvey ? '추천 보기' : '추천 받기'}
             </Link>
           </div>
         </div>
 
-        {/* 지갑 */}
+        {/* 코인 추천 */}
+        <div className="dashboard-card">
+          <div className="card-icon"><i className="fas fa-coins"></i></div>
+          <div className="card-content">
+            <h2>AI 코인 추천</h2>
+            <p>{userData.coinRecommendations ? '코인 추천 결과가 준비되었습니다.' : '설문을 완료하면 추천을 받을 수 있습니다.'}</p>
+            <Link 
+              to={userData.completedSurvey ? "/coin-recommendations" : "#"}
+              className={`card-button ${userData.completedSurvey ? 'primary' : 'disabled'}`}
+              onClick={(e) => {
+                if (!userData.completedSurvey) e.preventDefault();
+              }}
+            >
+              {userData.completedSurvey ? '코인 추천 보기' : '코인 추천 받기'}
+            </Link>
+          </div>
+        </div>
+
+        {/* 내 지갑 */}
         <div className="dashboard-card">
           <div className="card-icon"><i className="fas fa-wallet"></i></div>
           <div className="card-content">
             <h2>내 지갑</h2>
-            <p>{userData.walletValue > 0
-              ? `현재 지갑 가치: ${userData.walletValue.toLocaleString()}원`
-              : '추천 주식을 지갑에 추가하여 관리해보세요.'}</p>
+            <p>{userData.walletValue > 0 ? `현재 지갑 가치: ${userData.walletValue}원` : '추천 주식을 지갑에 추가하여 관리해보세요.'}</p>
             <Link to="/wallet" className="card-button primary">지갑 관리하기</Link>
+          </div>
+        </div>
+
+        {/* 자산 보기 */}
+        <div className="dashboard-card">
+          <div className="card-icon"><i className="fas fa-chart-bar"></i></div>
+          <div className="card-content">
+            <h2>자산 보기</h2>
+            <p>자산 정보를 확인하고 관리하세요.</p>
+            <Link to="/assets" className="card-button primary">자산 보기</Link>
           </div>
         </div>
       </div>
